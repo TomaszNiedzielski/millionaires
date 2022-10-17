@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Colors } from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
 import { Answer } from '../../../redux/questions';
 
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
         marginVertical: 6,
         borderRadius: 50,
         fontSize: 20,
-        backgroundColor: '#101094',
+        backgroundColor: Colors.accent,
     },
     selected: {
         backgroundColor: 'yellow',
