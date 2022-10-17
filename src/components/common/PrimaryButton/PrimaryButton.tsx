@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableNativeFeedback, ViewStyle, View } from 'react-native';
+import { Colors } from '../../../constants/colors';
 
 interface Props {
     title: string;
@@ -26,7 +27,7 @@ const PrimaryButton: React.FC<Props> = ({ title, onPress, disabled, style }) => 
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#25084d',
+        backgroundColor: Colors.primary,
         borderRadius: 40,
         width: '100%',
         borderWidth: 3,
