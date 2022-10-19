@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import questionsReducer from './questions';
 import levelsReduces from './levels';
+import lifebuoysReducer from './lifebuoys';
 
 export const store = configureStore({
     reducer: {
         questions: questionsReducer,
         levels: levelsReduces,
+        lifebuoys: lifebuoysReducer,
     }
 });
 

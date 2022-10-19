@@ -1,16 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAudience } from '../../../redux/lifebuoys';
+import { RootState } from '../../../redux/store';
 
 const Wrapper: React.FC<{
     children: any;
     onPress: () => void;
-}> = ({ children, onPress }) => {
+    isAvailable: boolean;
+}> = ({ children, onPress, isAvailable }) => {
     return (
         <TouchableNativeFeedback
             onPress={onPress}
             background={TouchableNativeFeedback.Ripple('#fff', true)}
+            disabled={!isAvailable}
         >
+            
             <View style={styles.itemWrapper}>
+                {!isAvailable && <Text style={styles.cross}>X</Text>}
                 {children}
             </View>
         </TouchableNativeFeedback>
@@ -18,10 +25,14 @@ const Wrapper: React.FC<{
 }
 
 const Lifebuoys: React.FC = () => {
+    const { audience, call, half } = useSelector((state: RootState) => state.lifebuoys);
+    const dispatch = useDispatch();
+
     return (
         <View style={styles.container}>
             <Wrapper
-                onPress={() => console.log('ściepa publiki')}
+                onPress={() => dispatch(setAudience({ inUse: true, isAvailable: false }))}
+                isAvailable={audience.isAvailable}
             >
                 <Image
                     source={require('../../../assets/people.png')}
@@ -31,6 +42,7 @@ const Lifebuoys: React.FC = () => {
             
             <Wrapper
                 onPress={() => console.log('telefon do przyjaciela')}
+                isAvailable={call.isAvailable}
             >
                 <Image
                     source={require('../../../assets/phone.png')}
@@ -40,6 +52,7 @@ const Lifebuoys: React.FC = () => {
 
             <Wrapper
                 onPress={() => console.log('połóweczke bym poprosił')}
+                isAvailable={half.isAvailable}
             >
                 <Text style={styles.itemText}>50%</Text>
             </Wrapper>
@@ -73,6 +86,12 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    cross: {
+        color: 'red',
+        fontSize: 80,
+        position: 'absolute',
+        zIndex: 1
     }
 });
 

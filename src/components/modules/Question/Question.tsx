@@ -5,6 +5,7 @@ import { Styles } from '../../../constants/styles';
 import { Question as QuestionProps, resetUsed, setAsUsed } from '../../../redux/questions';
 import { RootState } from '../../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
+import { removeLifebuoysFromUse } from '../../../redux/lifebuoys';
 
 const Question: React.FC = () => {
     const { levels, questions } = useSelector((state: RootState) => state);
@@ -27,6 +28,7 @@ const Question: React.FC = () => {
         const question = getRandomQuestion();
 
         dispatch(setAsUsed({ id: question.id }));
+        dispatch(removeLifebuoysFromUse())
         setQuestion(question);
     }, [levels.current]);
 

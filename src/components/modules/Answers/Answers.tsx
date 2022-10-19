@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { increaseLevel, resetLevels } from '../../../redux/levels';
+import { resetLifebuoys } from '../../../redux/lifebuoys';
 import { Answer } from '../../../redux/questions';
 import { timeout } from '../../../utils/timeout';
 import AnswersItem, { Mode } from '../AnswersItem/AnswersItem';
@@ -29,6 +30,7 @@ const Answers: React.FC<Props> = ({ answers }) => {
             setSelectedAnswerMode('incorrect');
             await timeout(1000);
             dispatch(resetLevels());
+            dispatch(resetLifebuoys());
             Alert.alert('Przegrałeś');
         }
 
