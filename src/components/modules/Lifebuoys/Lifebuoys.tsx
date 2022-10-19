@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAudience } from '../../../redux/lifebuoys';
+import { setAudience, setCall } from '../../../redux/lifebuoys';
 import { RootState } from '../../../redux/store';
 
 const Wrapper: React.FC<{
@@ -41,7 +41,7 @@ const Lifebuoys: React.FC = () => {
             </Wrapper>
             
             <Wrapper
-                onPress={() => console.log('telefon do przyjaciela')}
+                onPress={() => dispatch(setCall({ inUse: true, isAvailable: false }))}
                 isAvailable={call.isAvailable}
             >
                 <Image

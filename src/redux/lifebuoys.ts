@@ -22,13 +22,18 @@ const lifebuoysReducer = createSlice({
         setAudience: (state, action) => {
             state.audience = { ...state.audience, ...action.payload }
         },
+        setCall: (state, action) => {
+            state.call = { ...state.call, ...action.payload }
+        },
         removeLifebuoysFromUse: (state) => {
             state.audience.inUse = false;
+            state.call.inUse = false;
+            state.half.inUse = false;
         },
         resetLifebuoys: () => initialState
     }
 });
 
-export const { setAudience, removeLifebuoysFromUse, resetLifebuoys } = lifebuoysReducer.actions;
+export const { setAudience, setCall, removeLifebuoysFromUse, resetLifebuoys } = lifebuoysReducer.actions;
 
 export default lifebuoysReducer.reducer;

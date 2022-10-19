@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import AudienceVotes from '../components/modules/AudienceVotes/AudienceVotes';
 import { resetLifebuoys } from '../redux/lifebuoys';
+import Call from '../components/modules/Call/Call';
 
 const GameScreen: React.FC = () => {
     const { levels: { current, all }, lifebuoys } = useSelector((state: RootState) => state);
@@ -24,8 +25,10 @@ const GameScreen: React.FC = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.top}>
-                {lifebuoys.audience.inUse ?
-                    <AudienceVotes /> :
+                {lifebuoys.audience.inUse &&
+                    <AudienceVotes /> ||
+                lifebuoys.call.inUse &&
+                    <Call /> ||
                 <Levels />}
                 <Lifebuoys />
             </View>
