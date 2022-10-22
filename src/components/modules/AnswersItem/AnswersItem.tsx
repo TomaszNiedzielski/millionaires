@@ -11,10 +11,10 @@ interface Props extends Omit<Answer, 'isCorrect'> {
     mode?: Mode;
 }
 
-const AnswersItem: React.FC<Props> = ({ id, value, onSelect, mode }) => {
+const AnswersItem: React.FC<Props> = ({ id, value, onSelect, mode, isExcluded }) => {
     return (
         <TouchableWithoutFeedback
-            onPress={() => !mode && onSelect()}
+            onPress={() => (!mode && !isExcluded) && onSelect()}
         >
             <Text style={[
                 styles.container,
@@ -22,8 +22,10 @@ const AnswersItem: React.FC<Props> = ({ id, value, onSelect, mode }) => {
                 mode === 'correct' && styles.correct ||
                 mode === 'incorrect' && styles.incorrect)
             ]}>
-                <Text>{id}. </Text>
-                <Text>{value}</Text>
+                {!isExcluded ? <>
+                    <Text>{id}. </Text>
+                    <Text>{value}</Text>
+                </> : null}
             </Text>
         </TouchableWithoutFeedback>
     );

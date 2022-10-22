@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAudience, setCall } from '../../../redux/lifebuoys';
+import { setAudience, setCall, setHalf } from '../../../redux/lifebuoys';
+import { excludeTwoAnswers } from '../../../redux/questions';
 import { RootState } from '../../../redux/store';
 
 const Wrapper: React.FC<{
@@ -51,7 +52,10 @@ const Lifebuoys: React.FC = () => {
             </Wrapper>
 
             <Wrapper
-                onPress={() => console.log('połóweczke bym poprosił')}
+                onPress={() => {
+                    dispatch(setHalf({ inUse: true, isAvailable: false }));
+                    dispatch(excludeTwoAnswers());
+                }}
                 isAvailable={half.isAvailable}
             >
                 <Text style={styles.itemText}>50%</Text>

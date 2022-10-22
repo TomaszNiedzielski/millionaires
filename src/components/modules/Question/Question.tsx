@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Answers from '../Answers/Answers';
 import { Styles } from '../../../constants/styles';
-import { Question as QuestionProps, resetUsed, setAsUsed } from '../../../redux/questions';
+import { resetExcludedAnswers, Question as QuestionProps, resetUsed, setAsUsed } from '../../../redux/questions';
 import { RootState } from '../../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeLifebuoysFromUse } from '../../../redux/lifebuoys';
 
 const Question: React.FC = () => {
-    const { levels, questions } = useSelector((state: RootState) => state);
+    const { levels, questions, lifebuoys } = useSelector((state: RootState) => state);
     const [question, setQuestion] = useState<QuestionProps>();
     const dispatch = useDispatch();
 
@@ -25,12 +25,20 @@ const Question: React.FC = () => {
     }
 
     useEffect(() => {
+        dispatch(resetExcludedAnswers());
         const question = getRandomQuestion();
 
         dispatch(setAsUsed({ id: question.id }));
         dispatch(removeLifebuoysFromUse())
         setQuestion(question);
-    }, [levels.current]);
+    }, [levels.current, levels.losses]);
+
+    useEffect(() => {
+        if (lifebuoys.half.inUse) {
+            const updatedQuestion = questions.all.find((item) => item.id === question?.id);
+            setQuestion(updatedQuestion);
+        }
+    }, [lifebuoys.half.inUse]);
 
     if (question) {
         return (

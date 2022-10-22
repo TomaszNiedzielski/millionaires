@@ -9,6 +9,7 @@ export interface Answer {
     id: 'A' | 'B' | 'C' | 'D';
     value: string;
     isCorrect: boolean;
+    isExcluded?: boolean;
 }
 
 export interface Question {
@@ -114,10 +115,46 @@ const questionsReducer = createSlice({
         },
         resetUsed: (state) => {
             state.used = [];
+        },
+        excludeTwoAnswers: (state) => {
+            const currentQuestionId = state.used[state.used.length - 1];
+            const currentQuestionIndex = state.all.findIndex(({ id }) => id === currentQuestionId);
+            const allAnswers = state.all[currentQuestionIndex].answers;
+
+            const correctAnswerIndex = allAnswers.findIndex(({ isCorrect }) => isCorrect);
+            let incorrectAnswerIndexes = [0, 1, 2, 3].filter(value => value !== correctAnswerIndex);
+
+            /**
+             * This function will find two random numbers as indexes of 'incorrectAnswerIndexes' array.
+             */
+            const answersToExclude: number[] = [];
+            const getTwoRandomIndexOfIncorrectAnswerIndexes = () => {
+                const i = Math.floor(Math.random() * incorrectAnswerIndexes.length);
+
+                if (!answersToExclude.includes(incorrectAnswerIndexes[i])) {
+                    answersToExclude.push(incorrectAnswerIndexes[i]);
+                }
+
+                if (answersToExclude.length < 2) {
+                    getTwoRandomIndexOfIncorrectAnswerIndexes();
+                }
+            }
+
+            getTwoRandomIndexOfIncorrectAnswerIndexes();
+
+            allAnswers[answersToExclude[0]].isExcluded = true;
+            allAnswers[answersToExclude[1]].isExcluded = true;
+        },
+        resetExcludedAnswers: (state) => {
+            const currentQuestionId = state.used[state.used.length - 1];
+            const currentQuestionIndex = state.all.findIndex(({ id }) => id === currentQuestionId);
+            state.all[currentQuestionIndex]?.answers.forEach(answer => {
+                delete(answer.isExcluded);
+            });
         }
     }
 });
 
-export const { setAsUsed, resetUsed } = questionsReducer.actions;
+export const { setAsUsed, resetUsed, excludeTwoAnswers, resetExcludedAnswers } = questionsReducer.actions;
 
 export default questionsReducer.reducer;

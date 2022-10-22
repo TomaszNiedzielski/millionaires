@@ -55,7 +55,8 @@ const initialState = {
             id: 12,
             prize: '$1000 000'
         },
-    ]
+    ],
+    losses: 0,
 }
 
 const levelsReducer = createSlice({
@@ -67,6 +68,7 @@ const levelsReducer = createSlice({
         },
         resetLevels: (state) => {
             state.current = 0;
+            state.losses++;
         }
     }
 });
