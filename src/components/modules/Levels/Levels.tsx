@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Colors } from '../../../constants/colors';
+import { Styles } from '../../../constants/styles';
 import { RootState } from '../../../redux/store';
 
 const Levels: React.FC = () => {
@@ -10,10 +10,21 @@ const Levels: React.FC = () => {
     return (
         <View style={styles.container}>
             {all.slice(0).reverse().map(({ id, prize }) => (
-                <Text
-                    key={id}
-                    style={[styles.item, current === id && styles.currentLevel]}
-                >{prize}</Text>
+                <View key={id} style={styles.item}>
+                    {current + 1 === id ? <Image
+                        source={require('../../../assets/arrow-right.png')}
+                        style={{
+                            position: 'absolute',
+                            left: 10,
+                            alignSelf: 'center',
+                            height: 16,
+                            width: 16
+                        }}
+                    /> : null}
+                    <Text
+                        style={[styles.itemText, current === id && styles.currentLevel]}
+                    >{prize}</Text>
+                </View>
             ))}
         </View>
     );
@@ -24,12 +35,19 @@ const styles = StyleSheet.create({
         flex: 1
     },
     item: {
-        color: '#fff',
-        textAlign: 'center',
-        padding: 1,
         margin: 2,
-        backgroundColor: Colors.accent,
-        borderRadius: 4
+        backgroundColor: 'rgba(108, 108, 245, 1)',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 4,
+    },
+    itemText: {
+        ...Styles.whiteText,
+        fontSize: 12,
+        textAlign: 'center',
+        width: '100%',
+        padding: 1,
+        borderRadius: 4,
     },
     currentLevel: {
         backgroundColor: 'gold'

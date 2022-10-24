@@ -1,15 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableNativeFeedback, ViewStyle, View } from 'react-native';
+import { StyleSheet, Text, TouchableNativeFeedback, ViewStyle, View, TextStyle } from 'react-native';
 import { Colors } from '../../../constants/colors';
 
 interface Props {
     title: string;
     onPress?: () => void;
     disabled?: boolean;
-    style?: ViewStyle
+    style?: ViewStyle;
+    titleStyle?: TextStyle;
 }
 
-const PrimaryButton: React.FC<Props> = ({ title, onPress, disabled, style }) => {
+const PrimaryButton: React.FC<Props> = ({ title, onPress, disabled, style, titleStyle }) => {
     return (
         <View style={[styles.container, style]} testID="PrimaryButton">
             <TouchableNativeFeedback
@@ -17,8 +18,8 @@ const PrimaryButton: React.FC<Props> = ({ title, onPress, disabled, style }) => 
                 disabled={disabled}
                 background={TouchableNativeFeedback.Ripple('#000000', true)}
             >
-                <View style={styles.content}>
-                    <Text style={styles.title}>{title}</Text>
+                <View>
+                    <Text style={[styles.title, titleStyle]}>{title}</Text>
                 </View>
             </TouchableNativeFeedback>
         </View>
@@ -32,9 +33,8 @@ const styles = StyleSheet.create({
         width: '100%',
         borderWidth: 3,
         borderColor: '#1a0536',
-    },
-    content: {
         paddingVertical: 10,
+
     },
     title: {
         fontSize: 34,

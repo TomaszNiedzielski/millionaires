@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Colors } from '../../../constants/colors';
+import { Answer } from '../../../redux/questions';
 import { RootState } from '../../../redux/store';
 
 const Bar: React.FC<{ id: string; percentage: number }> = ({ id, percentage }) => {
@@ -30,21 +31,19 @@ const Bar: React.FC<{ id: string; percentage: number }> = ({ id, percentage }) =
     );
 }
 
-interface Votes {
-    A: number;
-    B: number;
-    C: number;
-    D: number;
+interface Vote {
+    id: string;
+    value: number | undefined;
 }
 
 const AudienceVotes: React.FC = () => {
     const { used, all } = useSelector((state: RootState) => state.questions);
-    const [votes, setVotes] = useState<Votes>();
+    const [votes, setVotes] = useState<Vote[]>([]);
 
-    const getRandomPercentageValues = () => {
+    const getRandomPercentageValues = (number: number) => {
         let sum = 100;
         const votesValues = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < number - 1; i++) {
             const value = Math.floor(Math.random() * sum);
             votesValues.push(value);
             sum -= value;
@@ -55,31 +54,42 @@ const AudienceVotes: React.FC = () => {
     }
 
     useEffect(() => {
-        let votesValues = getRandomPercentageValues();
-
         const currentQuestionId = used[used.length - 1];
         const currentQuestion = all.find(({ id }) => id === currentQuestionId);
-        const correctAnswerId = currentQuestion?.answers.find(({ isCorrect }) => isCorrect)?.id;
+
+        if (!currentQuestion) return;
+
+        const answers = currentQuestion.answers;
+        const correctAnswerId = answers.find(({ isCorrect }) => isCorrect)?.id;
+
+        // For the case when half of answers can be excluded we need to check how many answers are available
+        const availableAnswers: Answer[] = [];
+        answers.map(item => {
+            if (!item.isExcluded) {
+                availableAnswers.push(item);
+            }
+        });
+
+        let votesValues = getRandomPercentageValues(availableAnswers.length);
 
         const highestScore = Math.max(...votesValues);
         const highestScoreIndex = votesValues.indexOf(highestScore);
 
-        const votes: any = {
-            A: undefined,
-            B: undefined,
-            C: undefined,
-            D: undefined
-        }
+        const votes = availableAnswers.map(({ id, isCorrect }) => {
+            return {
+                id: id,
+                value: isCorrect ? votesValues[highestScoreIndex] : undefined
+            }
+        });
+
+        votesValues = votesValues.filter((_item, i) => i !== highestScoreIndex);
 
         if (correctAnswerId) {
-            votes[correctAnswerId] = votesValues[highestScoreIndex];
-            votesValues = votesValues.filter((_item, i) => i !== highestScoreIndex);
-
-            for (const item in votes) {
-                if (votes[item] === undefined) {
-                    votes[item] = votesValues.pop();
+            votes.forEach(item => {
+                if (item.value === undefined) {
+                    item.value = votesValues.pop();
                 }
-            }
+            });
         }
 
         setVotes(votes);
@@ -88,22 +98,13 @@ const AudienceVotes: React.FC = () => {
     if (votes) {
         return (
             <View style={styles.container}>
-                <Bar
-                    id="A"
-                    percentage={votes.A}
-                />
-                <Bar
-                    id="B"
-                    percentage={votes.B}
-                />
-                <Bar
-                    id="C"
-                    percentage={votes.C}
-                />
-                <Bar
-                    id="D"
-                    percentage={votes.D}
-                />
+                {votes.map(({ id, value }) => (
+                    <Bar
+                        key={id}
+                        id={id}
+                        percentage={value || 0}
+                    />
+                ))}
             </View>
         );
     }
@@ -116,6 +117,8 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 6,
         flexDirection: 'row',
+        height: '100%',
+        justifyContent: 'center'
     },
     barContainer: {
         alignItems: 'center',

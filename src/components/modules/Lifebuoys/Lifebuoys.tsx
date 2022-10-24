@@ -1,22 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { Colors } from '../../../constants/colors';
 import { setAudience, setCall, setHalf } from '../../../redux/lifebuoys';
 import { excludeTwoAnswers } from '../../../redux/questions';
 import { RootState } from '../../../redux/store';
 
-const Wrapper: React.FC<{
+interface Props {
     children: any;
     onPress: () => void;
     isAvailable: boolean;
-}> = ({ children, onPress, isAvailable }) => {
+    isDisabled: boolean;
+}
+
+const Wrapper: React.FC<Props> = ({ children, onPress, isAvailable, isDisabled }) => {
     return (
         <TouchableNativeFeedback
             onPress={onPress}
             background={TouchableNativeFeedback.Ripple('#fff', true)}
-            disabled={!isAvailable}
+            disabled={!isAvailable || isDisabled}
         >
-            
             <View style={styles.itemWrapper}>
                 {!isAvailable && <Text style={styles.cross}>X</Text>}
                 {children}
@@ -34,6 +37,7 @@ const Lifebuoys: React.FC = () => {
             <Wrapper
                 onPress={() => dispatch(setAudience({ inUse: true, isAvailable: false }))}
                 isAvailable={audience.isAvailable}
+                isDisabled={audience.isDisabled}
             >
                 <Image
                     source={require('../../../assets/people.png')}
@@ -44,6 +48,7 @@ const Lifebuoys: React.FC = () => {
             <Wrapper
                 onPress={() => dispatch(setCall({ inUse: true, isAvailable: false }))}
                 isAvailable={call.isAvailable}
+                isDisabled={call.isDisabled}
             >
                 <Image
                     source={require('../../../assets/phone.png')}
@@ -57,6 +62,7 @@ const Lifebuoys: React.FC = () => {
                     dispatch(excludeTwoAnswers());
                 }}
                 isAvailable={half.isAvailable}
+                isDisabled={half.isDisabled}
             >
                 <Text style={styles.itemText}>50%</Text>
             </Wrapper>
@@ -66,14 +72,14 @@ const Lifebuoys: React.FC = () => {
 
 const styles = StyleSheet.create({
     container: {
-        width: 100,
+        marginLeft: 30,
         justifyContent: 'center',
         alignItems: 'center'
     },
     itemWrapper: {
         height: 60,
         width: 60,
-        borderWidth: 1,
+        borderWidth: .5,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 50,
@@ -81,6 +87,7 @@ const styles = StyleSheet.create({
         padding: 10,
         flexDirection: 'row',
         marginVertical: 10,
+        backgroundColor: Colors.accent,
     },
     item: {
         height: '100%',

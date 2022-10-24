@@ -68,11 +68,16 @@ const levelsReducer = createSlice({
         },
         resetLevels: (state) => {
             state.current = 0;
+        },
+        increaseLosses: (state) => {
             state.losses++;
+        },
+        resetLosses: (state) => {
+            state.losses = 0;
         }
     }
 });
 
-export const { increaseLevel, resetLevels } = levelsReducer.actions;
+export const { increaseLevel, resetLevels, increaseLosses, resetLosses } = levelsReducer.actions;
 
 export default levelsReducer.reducer;

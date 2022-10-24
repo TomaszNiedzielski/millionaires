@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Answers from '../Answers/Answers';
 import { Styles } from '../../../constants/styles';
 import { resetExcludedAnswers, Question as QuestionProps, resetUsed, setAsUsed } from '../../../redux/questions';
@@ -42,7 +42,7 @@ const Question: React.FC = () => {
 
     if (question) {
         return (
-            <View>
+            <View style={styles.container}>
                 <Text style={styles.question} accessibilityRole="text">{question.content}</Text>
                 <Answers
                     answers={question.answers}
@@ -55,9 +55,20 @@ const Question: React.FC = () => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 20,
+        paddingBottom: 15,
+        justifyContent: 'flex-end',
+        height: Dimensions.get('window').height * 50 / 100,
+        width: Dimensions.get('window').width + 4,
+        shadowColor: '#fff',
+        elevation: 2,
+        borderTopWidth: .1,
+        borderTopColor: '#fff',
+        alignSelf: 'center',
+    },
     question: {
         fontSize: 22,
-        fontWeight: '500',
         ...Styles.whiteText,
         textAlign: 'center',
         marginBottom: 10,

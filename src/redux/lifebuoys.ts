@@ -3,15 +3,18 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     audience: {
         isAvailable: true,
-        inUse: false
+        inUse: false,
+        isDisabled: false,
     },
     call: {
         isAvailable: true,
-        inUse: false
+        inUse: false,
+        isDisabled: false,
     },
     half: {
         isAvailable: true,
-        inUse: false
+        inUse: false,
+        isDisabled: false,
     }
 }
 
@@ -35,10 +38,20 @@ const lifebuoysReducer = createSlice({
             state.call.inUse = false;
             state.half.inUse = false;
         },
-        resetLifebuoys: () => initialState
+        resetLifebuoys: () => initialState,
+        disableLifebuoys: (state) => {
+            state.audience.isDisabled = true;
+            state.call.isDisabled = true;
+            state.half.isDisabled = true;
+        },
+        enableLifebuoys: (state) => {
+            state.audience.isDisabled = false;
+            state.call.isDisabled = false;
+            state.half.isDisabled = false;
+        }
     }
 });
 
-export const { setAudience, setCall, setHalf, removeLifebuoysFromUse, resetLifebuoys } = lifebuoysReducer.actions;
+export const { setAudience, setCall, setHalf, removeLifebuoysFromUse, resetLifebuoys, disableLifebuoys, enableLifebuoys } = lifebuoysReducer.actions;
 
 export default lifebuoysReducer.reducer;
