@@ -1,4 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
+import questions from '../data/questions';
+
+/**
+ * Add answer ids for imported questions
+ */
+const finalQuestions = questions.map(question => {
+    const availableAnswers: Answer['id'][] = ['A', 'B', 'C', 'D'];
+
+    question.answers.forEach(answer => {
+        const index = Math.floor(Math.random() * availableAnswers.length);
+        answer.id = availableAnswers[index];
+        availableAnswers.splice(index, 1);
+    });
+    question.answers.sort((a, b) => a.id > b.id ? 1 : -1);
+    
+    return question;
+});
 
 /**
  * 'all' property includes all existing questions in app
@@ -18,86 +35,7 @@ export interface Question {
     answers: Answer[];
 }
 
-const all: Question[] = [
-    {
-        id: 1,
-        content: 'Jak ma na imię piesek Friza i Wersow?',
-        answers: [
-            {
-                id: 'A',
-                value: 'Chmurka',
-                isCorrect: true,
-            },
-            {
-                id: 'B',
-                value: 'Azor',
-                isCorrect: false
-            },
-            {
-                id: 'C',
-                value: 'Piesek',
-                isCorrect: false
-            },
-            {
-                id: 'D',
-                value: 'Leszek',
-                isCorrect: false
-            },
-        ]
-    },
-    {
-        id: 2,
-        content: 'Jakiego koloru włosy ma Young Leosia?',
-        answers: [
-            {
-                id: 'A',
-                value: 'Zielone',
-                isCorrect: false,
-            },
-            {
-                id: 'B',
-                value: 'Turkusowe',
-                isCorrect: false
-            },
-            {
-                id: 'C',
-                value: 'Lapis Lazuli',
-                isCorrect: false
-            },
-            {
-                id: 'D',
-                value: 'Różowe',
-                isCorrect: true
-            },
-        ]
-    },
-    {
-        id: 3,
-        content: 'Kogo oszukała Fagata?',
-        answers: [
-            {
-                id: 'A',
-                value: 'Friza',
-                isCorrect: false,
-            },
-            {
-                id: 'B',
-                value: 'Murcix',
-                isCorrect: false
-            },
-            {
-                id: 'C',
-                value: 'Stuu',
-                isCorrect: true
-            },
-            {
-                id: 'D',
-                value: 'Trombe',
-                isCorrect: false
-            },
-        ]
-    },
-];
+const all: Question[] = finalQuestions;
 
 const used: Question['id'][] = [];
 
