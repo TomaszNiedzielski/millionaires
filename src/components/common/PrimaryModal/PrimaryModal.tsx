@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
+import { Image, Modal, StyleSheet, View } from 'react-native';
 
 interface Props {
     children?: React.ReactNode;
@@ -17,6 +17,10 @@ const PrimaryModal: React.FC<Props> = ({ children, onClose, isVisible }) => {
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
+                    <Image
+                        source={require('../../../assets/background.png')}
+                        style={styles.background}
+                    />
                     {children}
                 </View>
             </View>
@@ -29,7 +33,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, .3)',
+        backgroundColor: 'rgba(0, 0, 0, .5)',
         position: 'absolute',
         left: 0,
         right: 0,
@@ -39,19 +43,33 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
         borderRadius: 20,
-        padding: 35,
         alignItems: 'center',
-        shadowColor: '#000',
+        shadowColor: '#fff',
         shadowOffset: {
             width: 0,
             height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+        position: 'relative',
+        width: '80%',
+        height: '60%',
+        borderWidth: 5,
+        borderColor: '#fff'
     },
+    background: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: 20,
+    }
 });
 
 export default PrimaryModal;
